@@ -51,21 +51,18 @@ function ingresar_item() {
 	var table_resumen;
 	if (item !== '' && qty > 0) {
 		// Create the table just once if it did not existed already
-		if (order.items.length < 1) {
-			
-			console.log('Create table');
-		}
 		order.items.push(item)
 		order.order_qty.push(qty);
 		table_resumen = generar_resumen();
 		print_HTML(table_resumen, 'resume');
+		update_order();
 	} else {
 		alert('Debe ingresar un item y su cantidad!');
 	}
 	console.log(order);
 }
 
-function generar_resumen() {
+function crear_tabla() {
 	var div = document.createElement('div');
 	div.setAttribute('class', 'pedido');
 	var button = document.createElement('button');
@@ -77,27 +74,74 @@ function generar_resumen() {
 	thead.innerHTML = '<tr><th>Items</th><th>Quantity</th></tr>';
 	table.appendChild(thead);
 	var tbody = document.createElement('tbody');
+	tbody.setAttribute('id', 'tabla_pedido');
 	// Insert data to the table's body
-	for (var i = 0; i < order.items.length; i++) {
-		var row_item = document.createElement('tr');
-		// Insert the reference item
-		var td_item = document.createElement('td');
-		var item = document.createTextNode(order.items[i]);
-		td_item.appendChild(item);
-		// Insert the quantity
-		var td_qty = document.createElement('td');
-		var qty = document.createTextNode(order.order_qty[i]);
-		td_qty.appendChild(qty);
-		// Insert the data in the row of the table
-		row_item.appendChild(td_item);
-		row_item.appendChild(td_qty);
-		tbody.appendChild(row_item);
-	}
+	// var row_item = update_order();
+	// tbody.appendChild(row_item);
+	
 	table.appendChild(tbody);
 	div.appendChild(table);
 	div.appendChild(button);
 	console.log(table);
-	return(div);
+	return (div);
 }
+
+function update_order() {
+	var row_item = document.createElement('tr');
+	var td_item = document.createElement('td');
+	var item = document.createTextNode(order.items[0]);
+	td_item.appendChild(item);
+	var td_qty = document.createElement('td');
+	var qty = document.createTextNode(order.order_qty[0]);
+	td_qty.appendChild(qty);
+	// Insert the data in the row of the table
+	row_item.appendChild(td_item);
+	row_item.appendChild(td_qty);
+	// return row_item;
+	document.getElementById('tabla_pedido').appendChild(row_item);
+}
+
+function generar_resumen() {
+	if (order.items.length == 1) {
+		return crear_tabla();
+		// update_order();	
+	}
+
+}
+
+// function generar_resumen() {
+// 	var div = document.createElement('div');
+// 	div.setAttribute('class', 'pedido');
+// 	var button = document.createElement('button');
+// 	button.appendChild(document.createTextNode('Calcular'));
+
+// 	var table = document.createElement('table');
+// 	// Create and append the head of the table
+// 	var thead = document.createElement('thead');
+// 	thead.innerHTML = '<tr><th>Items</th><th>Quantity</th></tr>';
+// 	table.appendChild(thead);
+// 	var tbody = document.createElement('tbody');
+// 	// Insert data to the table's body
+// 	for (var i = 0; i < order.items.length; i++) {
+// 		var row_item = document.createElement('tr');
+// 		// Insert the reference item
+// 		var td_item = document.createElement('td');
+// 		var item = document.createTextNode(order.items[i]);
+// 		td_item.appendChild(item);
+// 		// Insert the quantity
+// 		var td_qty = document.createElement('td');
+// 		var qty = document.createTextNode(order.order_qty[i]);
+// 		td_qty.appendChild(qty);
+// 		// Insert the data in the row of the table
+// 		row_item.appendChild(td_item);
+// 		row_item.appendChild(td_qty);
+// 		tbody.appendChild(row_item);
+// 	}
+// 	table.appendChild(tbody);
+// 	div.appendChild(table);
+// 	div.appendChild(button);
+// 	console.log(table);
+// 	return(div);
+// }
 
 
