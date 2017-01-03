@@ -4,6 +4,11 @@ window.onload = function() {
 
 function initialize() {
 	var btn = document.getElementById('btn');
+	document.addEventListener('keydown', function(e) {
+		if (e.keyCode == 13) {
+			ingresar_item();
+		}
+	});
 	btn.addEventListener('click', ingresar_item);
 }
 
@@ -26,46 +31,51 @@ var ref_producto = [
 	}
 ];
 
-function print_HTML(content, dom_location) {
-	document.getElementById(dom_location).innerHTML = '';
-	document.getElementById(dom_location).appendChild(content);
-}
-
 var order = {
+	i_item: 0,
 	items: [],
 	order_qty: []
 }
 
-// Tips para modificar:
-// Actualmente se está reproduciendo todo el proceso, mejor:
-// Crear varias modulos: crearTabla() si es el primer item,
-// Despúes, aplicar function para agregar items a la tabla ya creada, para eso es útil appendChild
-
-// En cuanto a los objetos, ver la posibilidad de llevar el inventario desde los objectos y no desde los arrays
-// Por ejemplo, cuando el usuario ingresa, validar que la referencia exista y agregar la cantidad correspondiente
-// al value of the key: {"Cuñete": 100}, + cuñete : 100, entonces order.items["Cuñete"] agregarle 100 al pedido
+var _HTML = {
+	inner: function(content, dom_location) {
+		document.getElementById(dom_location).innerHTML = content;
+	},
+	append: function(content, dom_location) {
+		document.getElementById(dom_location).appendChild(content);
+	}
+}
 
 function ingresar_item() {
 	var item = document.getElementById('referencia').value;
 	var qty = document.getElementById('cantidad').value;
 	var table_resumen;
 	if (item !== '' && qty > 0) {
-		// Create the table just once if it did not existed already
 		order.items.push(item)
 		order.order_qty.push(qty);
-		table_resumen = generar_resumen();
-		print_HTML(table_resumen, 'resume');
-		update_order();
+		generar_resumen();
+		document.getElementById('referencia').value = '';
+		document.getElementById('cantidad').value = '';
 	} else {
 		alert('Debe ingresar un item y su cantidad!');
 	}
-	console.log(order);
+}
+
+function generar_resumen() {
+	if (order.items.length == 1) {
+		table_resumen = crear_tabla(); // Returns the table to append to the DOM just for one time
+		_HTML.append(table_resumen, 'resume');
+		update_order();	// Append a <tr> every the "Ingresar" btn is clicked.
+	} else {
+		update_order();
+	}
 }
 
 function crear_tabla() {
 	var div = document.createElement('div');
 	div.setAttribute('class', 'pedido');
-	var button = document.createElement('button');
+	var button = document.createElement('a');
+	button.setAttribute('class', 'button');
 	button.appendChild(document.createTextNode('Calcular'));
 
 	var table = document.createElement('table');
@@ -75,9 +85,6 @@ function crear_tabla() {
 	table.appendChild(thead);
 	var tbody = document.createElement('tbody');
 	tbody.setAttribute('id', 'tabla_pedido');
-	// Insert data to the table's body
-	// var row_item = update_order();
-	// tbody.appendChild(row_item);
 	
 	table.appendChild(tbody);
 	div.appendChild(table);
@@ -89,59 +96,20 @@ function crear_tabla() {
 function update_order() {
 	var row_item = document.createElement('tr');
 	var td_item = document.createElement('td');
-	var item = document.createTextNode(order.items[0]);
+	var item = document.createTextNode(order.items[order.i_item]);
 	td_item.appendChild(item);
 	var td_qty = document.createElement('td');
-	var qty = document.createTextNode(order.order_qty[0]);
+	var qty = document.createTextNode(order.order_qty[order.i_item]);
 	td_qty.appendChild(qty);
 	// Insert the data in the row of the table
 	row_item.appendChild(td_item);
 	row_item.appendChild(td_qty);
-	// return row_item;
-	document.getElementById('tabla_pedido').appendChild(row_item);
+	_HTML.append(row_item, 'tabla_pedido');
+	console.log(order.i_item);
+	order.i_item++;
 }
 
-function generar_resumen() {
-	if (order.items.length == 1) {
-		return crear_tabla();
-		// update_order();	
-	}
 
-}
-
-// function generar_resumen() {
-// 	var div = document.createElement('div');
-// 	div.setAttribute('class', 'pedido');
-// 	var button = document.createElement('button');
-// 	button.appendChild(document.createTextNode('Calcular'));
-
-// 	var table = document.createElement('table');
-// 	// Create and append the head of the table
-// 	var thead = document.createElement('thead');
-// 	thead.innerHTML = '<tr><th>Items</th><th>Quantity</th></tr>';
-// 	table.appendChild(thead);
-// 	var tbody = document.createElement('tbody');
-// 	// Insert data to the table's body
-// 	for (var i = 0; i < order.items.length; i++) {
-// 		var row_item = document.createElement('tr');
-// 		// Insert the reference item
-// 		var td_item = document.createElement('td');
-// 		var item = document.createTextNode(order.items[i]);
-// 		td_item.appendChild(item);
-// 		// Insert the quantity
-// 		var td_qty = document.createElement('td');
-// 		var qty = document.createTextNode(order.order_qty[i]);
-// 		td_qty.appendChild(qty);
-// 		// Insert the data in the row of the table
-// 		row_item.appendChild(td_item);
-// 		row_item.appendChild(td_qty);
-// 		tbody.appendChild(row_item);
-// 	}
-// 	table.appendChild(tbody);
-// 	div.appendChild(table);
-// 	div.appendChild(button);
-// 	console.log(table);
-// 	return(div);
-// }
-
-
+// En cuanto a los objetos, ver la posibilidad de llevar el inventario desde los objectos y no desde los arrays
+// Por ejemplo, cuando el usuario ingresa, validar que la referencia exista y agregar la cantidad correspondiente
+// al value of the key: {"Cuñete": 100}, + cuñete : 100, entonces order.items["Cuñete"] agregarle 100 al pedido
