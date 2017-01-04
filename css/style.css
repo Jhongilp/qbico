@@ -2,7 +2,6 @@
 	box-sizing: border-box;
 }
 
-
 html {
 	font-size: 1em;
 	font-family: sans-serif;
@@ -84,9 +83,7 @@ input[type='number'] {
 }
 
 .content {
-	/*display: flex;
-	flex-direction: row;
-	justify-content: center;*/
+
 }
 
 button {
@@ -98,20 +95,14 @@ button {
 .columns {
 	background-color: rgba(234, 235, 237, .8);
 	padding: 5px 0 0 0;
-	/*min-height: 200px;*/
-	/*border: 1px solid blue;*/
 	display: flex;
 	flex-flow: column wrap;
-		/*flex-direction: row;
-		flex-wrap: wrap;*/
 	justify-content: space-between;
-	
 }
 
 .col {
 	background-color: rgba(197, 198, 201, 1);
 	border: 1px solid #efefef;
-	/*height: 100px;*/
 	text-align: center;
 }
 
@@ -122,11 +113,7 @@ button {
 }
 
 .col-2 {
-	/*width: 60%;*/
-	/*flex-grow: 2;*/
-	/*order: -1;*/
 }
-
 
 /*+++++++++++++++++++++++++
 	Col-1 TABLE Resume
@@ -137,12 +124,10 @@ button {
 	background-color: rgba(255, 255, 255, 0.9);
 	color: #fff;
 	margin-bottom: 1em;
-    /*padding: 0.5em 0;*/
 }
 
 table,
 tr, td {
-	/*border: 1px solid #eee;*/
 	border-spacing: 1px;
 }
 

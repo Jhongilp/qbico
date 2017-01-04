@@ -12,24 +12,48 @@ function initialize() {
 	btn.addEventListener('click', ingresar_item);
 }
 
-var ref_producto = [
-	cuñete = {
-		peso: 27,
-		dimensiones: {
-			largo: 26,
-			ancho: 28,
-			alto: 36
+var inventory = {
+	cuñete: {
+		cantidad: 1500,
+		color: ['yellow', 'blue', 'green', 'white'],
+		weight: 27,
+		measure: {
+			l: 26,
+			w: 26,
+			h: 36
 		}
 	},
-	medio_cuñete = {
-		peso: 14,
-		dimensiones: {
-			largo: 24,
-			ancho: 25,
-			alto: 25
+	medio_cuñete: {
+		cantidad: 2000,
+		color: ['yellow', 'blue', 'green', 'white'],
+		weight: 20,
+		measure: {
+			l: 18,
+			w: 18,
+			h: 25
+		}
+	},
+	galon: {
+		cantidad: 5000,
+		color: ['yellow', 'blue', 'green', 'white'],
+		weight: 10,
+		measure: {
+			l: 10,
+			w: 10,
+			h: 20
+		}
+	},
+	bulto: {
+		cantidad: 1000,
+		color: ['yellow', 'blue', 'green', 'white'],
+		weight: 40,
+		measure: {
+			l: 30,
+			w: 20,
+			h: 10
 		}
 	}
-];
+};
 
 var order = {
 	i_item: 0,
@@ -46,19 +70,30 @@ var _HTML = {
 	}
 }
 
+var checkInventory = function(item, qty) {
+	// First check if item exist, if so then check the quantity, both conditions must be true, otherwhise will be false
+	var item_exist = inventory.hasOwnProperty(item);
+	var stock = item_exist ? inventory[item].cantidad > qty : false;
+	return stock;
+};
+
 function ingresar_item() {
-	var item = document.getElementById('referencia').value;
+	var item = document.getElementById('referencia').value.toLowerCase();
 	var qty = document.getElementById('cantidad').value;
-	var table_resumen;
+	var item_available = checkInventory(item, qty); // --> true or false
+
 	if (item !== '' && qty > 0) {
-		order.items.push(item)
-		order.order_qty.push(qty);
-		generar_resumen();
-		document.getElementById('referencia').value = '';
-		document.getElementById('cantidad').value = '';
-	} else {
-		alert('Debe ingresar un item y su cantidad!');
-	}
+		item_available ? (
+			console.log('An item was added: ' + item),
+			order.items.push(item),
+			order.order_qty.push(qty),
+			generar_resumen(),
+			document.getElementById('referencia').value = '',
+			document.getElementById('cantidad').value = ''
+		) : (
+			alert('Item is not available or quantity exceeds the stock!')
+		)
+	} else { alert('Debe ingresar un item y su cantidad!')}
 }
 
 function generar_resumen() {
@@ -85,7 +120,7 @@ function crear_tabla() {
 	table.appendChild(thead);
 	var tbody = document.createElement('tbody');
 	tbody.setAttribute('id', 'tabla_pedido');
-	
+
 	table.appendChild(tbody);
 	div.appendChild(table);
 	div.appendChild(button);
