@@ -96,8 +96,26 @@ function ingresar_item() {
 	} else { alert('Debe ingresar un item y su cantidad!')}
 }
 
+// Esta function realmente solo funciona para crear elements con clases :( !!!
+// Pendiente modificar para que se adapte según los argumentos
+function createElement(tag, attribute, text) {
+	var element = document.createElement(tag);
+	var attr = attribute.split(' ');
+	attr.map(function(e) {
+		element.classList.add(e);
+	});
+	element.setAttribute('href', '#')
+	element.appendChild(document.createTextNode(text));
+	return element;
+}
+
 function generar_resumen() {
 	if (order.items.length == 1) {
+	// Add 'edit' and 'clear' buttons:
+		var edit_btn = createElement('a', 'button edit', 'Edit');
+		var clear_btn = createElement('a', 'button clear', 'Clear');
+		_HTML.append(edit_btn, 'cmd-buttons');
+		_HTML.append(clear_btn, 'cmd-buttons');
 		table_resumen = crear_tabla(); // Returns the table to append to the DOM just for one time
 		_HTML.append(table_resumen, 'resume');
 		update_order();	// Append a <tr> every the "Ingresar" btn is clicked.
@@ -109,10 +127,7 @@ function generar_resumen() {
 function crear_tabla() {
 	var div = document.createElement('div');
 	div.setAttribute('class', 'pedido');
-	var button = document.createElement('a');
-	button.setAttribute('class', 'button');
-	button.appendChild(document.createTextNode('Calcular'));
-
+	var button = createElement('a', 'button calcular', 'Calcular');
 	var table = document.createElement('table');
 	// Create and append the head of the table
 	var thead = document.createElement('thead');
@@ -148,3 +163,6 @@ function update_order() {
 // En cuanto a los objetos, ver la posibilidad de llevar el inventario desde los objectos y no desde los arrays
 // Por ejemplo, cuando el usuario ingresa, validar que la referencia exista y agregar la cantidad correspondiente
 // al value of the key: {"Cuñete": 100}, + cuñete : 100, entonces order.items["Cuñete"] agregarle 100 al pedido
+
+// Habilitar opción para editar o eliminar items del pedido a cubicar
+// Crear los icons de 'editar' 'eliminar'
