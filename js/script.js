@@ -122,10 +122,13 @@ function generar_resumen() {
 	if (order.items.length == 1) {
 	// Add 'edit' and 'clear' buttons:
 		var edit_btn = createElement('a', 'button edit', 'Edit');
+		edit_btn.setAttribute('id', 'edit_btn');
 		var clear_btn = createElement('a', 'button clear', 'Clear');
+		clear_btn.setAttribute('id', 'clear_btn');
 		_HTML.append(edit_btn, 'cmd-buttons');
 		_HTML.append(clear_btn, 'cmd-buttons');
 		// --> buttons were appended
+		handle_button_events(); // add functions to 'edit' and 'clear' buttons
 
 		table_resumen = crear_tabla(); // Returns the table to append to the DOM just for one time
 		_HTML.append(table_resumen, 'resume');
@@ -156,21 +159,32 @@ function crear_tabla() {
 
 function update_order() {
 	var row_item = document.createElement('tr');
-	var td_item = document.createElement('td');
 
+	var td_item = document.createElement('td');
 	// --> append input for each 'td' tag in order to edit if user click 'edit' buttton
 	// --> inputs appended should have a class that hide the element, only visible when 'edit'
-	var editable_input = document.createElement('input');
-	editable_input.setAttribute('class', 'hidden');
-	editable_input.setAttribute('type', 'text');
-	editable_input.setAttribute('value', order.items[order.i_item]); // --> value of the index of the array inside the object 'order'.
-	// Above only will display if 'edit' botton is clicked
-	var item = document.createTextNode(order.items[order.i_item]);
-	td_item.appendChild(editable_input);
-	td_item.appendChild(item);
+	var editableInputItem = document.createElement('input');
+	editableInputItem.setAttribute('class', 'hidden');
+	editableInputItem.setAttribute('type', 'text');
+	editableInputItem.setAttribute('value', order.items[order.i_item]); // --> value of the index of the array inside the object 'order'.
+	// Above will only display if 'edit' botton is clicked
+	var item = document.createElement('div');
+	item.appendChild(document.createTextNode(order.items[order.i_item]));
+	td_item.appendChild(editableInputItem); // --> Only visible if 'edit' button was clicked
+	td_item.appendChild(item); // --> show this data by default
+
 	var td_qty = document.createElement('td');
-	var qty = document.createTextNode(order.order_qty[order.i_item]);
-	td_qty.appendChild(qty);
+	var editableInputQty = document.createElement('input');
+	editableInputQty.setAttribute('class', 'hidden');
+	editableInputQty.setAttribute('type', 'text');
+	editableInputQty.setAttribute('value', order.order_qty[order.i_item]); // --> value of the index of the array inside the object 'order'.
+	// Above will only display if 'edit' botton is clicked
+
+	var qty = document.createElement('div');
+	qty.appendChild(document.createTextNode(order.order_qty[order.i_item]));
+	td_qty.appendChild(editableInputQty); // --> Only visible if 'edit' button was clicked
+	td_qty.appendChild(qty); // --> show this data by default
+
 	// Insert the data in the row of the table
 	row_item.appendChild(td_item);
 	row_item.appendChild(td_qty);
@@ -179,10 +193,28 @@ function update_order() {
 	order.i_item++;
 }
 
+function handle_button_events() {
+	var edit_button = document.getElementById('edit_btn');
+	edit_button.addEventListener('click', editOrder)
+}
+
+var editOrder = function() {
+	var orderResumeTable = document.getElementById('tabla_pedido');
+	var dataFromOrderResume = orderResumeTable.getElementsByTagName('td');
+	var editableInput = Array.from(dataFromOrderResume);
+	editableInput.map(function(td) {
+		td.children[0].className = 'edit_order';
+		td.children[1].className = 'hidden';
+		td.style.backgroundColor = '#fff';
+	});
+}
+
+
+
+
+
+
 
 // En cuanto a los objetos, ver la posibilidad de llevar el inventario desde los objectos y no desde los arrays
 // Por ejemplo, cuando el usuario ingresa, validar que la referencia exista y agregar la cantidad correspondiente
 // al value of the key: {"Cuñete": 100}, + cuñete : 100, entonces order.items["Cuñete"] agregarle 100 al pedido
-
-// Habilitar opción para editar o eliminar items del pedido a cubicar
-// Crear los icons de 'editar' 'eliminar'
