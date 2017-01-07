@@ -159,6 +159,10 @@ tr, td {
 	width: 70%
 }
 
+.hidden {
+	display: none;
+}
+
 .col-1 table thead {
 	background-color: rgb(135,135,135);
 }

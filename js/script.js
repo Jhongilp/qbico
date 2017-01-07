@@ -56,7 +56,7 @@ var inventory = {
 };
 
 var order = {
-	i_item: 0,
+	i_item: 0, // Keep the count of items appened to the order table
 	items: [],
 	order_qty: []
 }
@@ -98,6 +98,15 @@ function ingresar_item() {
 
 // Esta function realmente solo funciona para crear elements con clases :( !!!
 // Pendiente modificar para que se adapte según los argumentos
+
+/*  ++++++++++++++++++++++++++++++++++++++++
+	Modify createElement function as follows:
+	createElement {
+	id: create element with id attribute
+	class: create element with class attribute
+	}
+	  ++++++++++++++++++++++++++++++++++++++++ */
+
 function createElement(tag, attribute, text) {
 	var element = document.createElement(tag);
 	var attr = attribute.split(' ');
@@ -116,6 +125,8 @@ function generar_resumen() {
 		var clear_btn = createElement('a', 'button clear', 'Clear');
 		_HTML.append(edit_btn, 'cmd-buttons');
 		_HTML.append(clear_btn, 'cmd-buttons');
+		// --> buttons were appended
+
 		table_resumen = crear_tabla(); // Returns the table to append to the DOM just for one time
 		_HTML.append(table_resumen, 'resume');
 		update_order();	// Append a <tr> every the "Ingresar" btn is clicked.
@@ -146,7 +157,16 @@ function crear_tabla() {
 function update_order() {
 	var row_item = document.createElement('tr');
 	var td_item = document.createElement('td');
+
+	// --> append input for each 'td' tag in order to edit if user click 'edit' buttton
+	// --> inputs appended should have a class that hide the element, only visible when 'edit'
+	var editable_input = document.createElement('input');
+	editable_input.setAttribute('class', 'hidden');
+	editable_input.setAttribute('type', 'text');
+	editable_input.setAttribute('value', order.items[order.i_item]); // --> value of the index of the array inside the object 'order'.
+	// Above only will display if 'edit' botton is clicked
 	var item = document.createTextNode(order.items[order.i_item]);
+	td_item.appendChild(editable_input);
 	td_item.appendChild(item);
 	var td_qty = document.createElement('td');
 	var qty = document.createTextNode(order.order_qty[order.i_item]);
