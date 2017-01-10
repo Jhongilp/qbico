@@ -139,15 +139,11 @@ input[type='number'] {
 ++++++++++++++++++++++++++*/
 
 .col-1 table {
+	border: 1px solid #fff;
 	width: 100%;
 	background-color: rgba(255, 255, 255, 0.9);
 	color: #fff;
 	margin-bottom: 1em;
-}
-
-table,
-tr, td {
-	border-spacing: 1px;
 }
 
 .col-1 tr {
@@ -157,6 +153,11 @@ tr, td {
 
 .col-1 td:nth-child(1) {
 	width: 70%
+}
+
+.col-1 tr, td {
+		background-color: #4a89ca;
+		border: 1px solid #fff;
 }
 
 .hidden {
@@ -177,13 +178,25 @@ tr, td {
 .col-1 table tbody td:nth-child(1) {
 	padding-left: 0.5em;
 	text-align: left;
-	background-color: #4a89ca;
+	/*background-color: #4a89ca;*/
 }
 
 .col-1 table tbody td:nth-child(2) {
 	text-align: center;
-	background-color: #4a89ca;
+	/*background-color: #4a89ca;*/
 }
+
+.chooseToEdit {
+	border: 4px solid #fff;
+	transition: background-color .5s
+}
+
+.chooseToEdit:hover {
+	background-color: #fff;
+	color: rgb(66,133,244);
+}
+
+
 
 /*++++++++++++++++++++++++++++
 	Media Queries

@@ -193,21 +193,50 @@ function update_order() {
 	order.i_item++;
 }
 
+
 function handle_button_events() {
 	var edit_button = document.getElementById('edit_btn');
-	edit_button.addEventListener('click', editOrder)
+	edit_button.addEventListener('click', applyHoverEffect)
 }
 
-var editOrder = function() {
+var applyHoverEffect = function() {
 	var orderResumeTable = document.getElementById('tabla_pedido');
 	var dataFromOrderResume = orderResumeTable.getElementsByTagName('td');
 	var editableInput = Array.from(dataFromOrderResume);
 	editableInput.map(function(td) {
-		td.children[0].className = 'edit_order';
-		td.children[1].className = 'hidden';
-		td.style.backgroundColor = '#fff';
+		td.className = 'chooseToEdit';
+		td.addEventListener('click', function() {
+			var editedInput = td.children[0];
+			td.children[0].className = 'edit_order';
+			td.children[1].className = 'hidden';
+			editedInput.addEventListener('keydown', function(e) {
+				if (e.keyCode == 13) {
+					updateEditOrder();
+				}
+			});
+		});
 	});
 }
+
+var updateEditOrder = function() {
+	alert('How many?');
+}
+
+// function handle_button_events() {
+// 	var edit_button = document.getElementById('edit_btn');
+// 	edit_button.addEventListener('click', editOrder)
+// }
+//
+// var editOrder = function() {
+// 	var orderResumeTable = document.getElementById('tabla_pedido');
+// 	var dataFromOrderResume = orderResumeTable.getElementsByTagName('td');
+// 	var editableInput = Array.from(dataFromOrderResume);
+// 	editableInput.map(function(td) {
+// 		td.children[0].className = 'edit_order';
+// 		td.children[1].className = 'hidden';
+// 		td.style.backgroundColor = '#fff';
+// 	});
+// }
 
 
 
