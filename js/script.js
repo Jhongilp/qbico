@@ -196,49 +196,58 @@ function update_order() {
 
 function handle_button_events() {
 	var edit_button = document.getElementById('edit_btn');
-	edit_button.addEventListener('click', applyHoverEffect)
+	edit_button.addEventListener('click', makeEditable);
 }
 
-var applyHoverEffect = function() {
+var makeEditable = function() {
 	var orderResumeTable = document.getElementById('tabla_pedido');
 	var dataFromOrderResume = orderResumeTable.getElementsByTagName('td');
 	var editableInput = Array.from(dataFromOrderResume);
-	editableInput.map(function(td) {
-		td.className = 'chooseToEdit';
-		td.addEventListener('click', function() {
-			var editedInput = td.children[0];
-			td.children[0].className = 'edit_order';
-			td.children[1].className = 'hidden';
-			editedInput.addEventListener('keydown', function(e) {
-				if (e.keyCode == 13) {
-					updateEditOrder();
-				}
+
+	function inputToUpdate() {
+		var inputData = editableInput.map(function(td) {
+			td.className = 'chooseToEdit';
+			td.addEventListener('click', function() {
+				var editedInput = td.children[0];
+				td.children[0].className = 'edit_order'; // make visible the input field to edit the order
+				td.children[1].className = 'hidden'; // hide the <div> that contains the innerText
 			});
+			return td.children[0];
 		});
-	});
+		return inputData; // --> for test only
+	}
+
+	var arrAfuera = inputToUpdate();
+	for (var i = 0; i < arrAfuera.length; i++) {
+		arrAfuera[i].addEventListener('keydown', function(e) {
+			console.log(e.keyCode);
+			if (e.keyCode === 9) {
+				console.log(this.className);
+				console.log('This item is in the array: ' + i);
+
+				// this.classList.remove('edit_order');
+				alert(this.value);
+			}
+			// console.log(this);
+			// this.classList.remove('edit_order');
+		});
+	}
+	// inputToUpdate(); // --> Invoke if have not been already
+	console.log(arrAfuera);
 }
 
-var updateEditOrder = function() {
-	alert('How many?');
+var updateEditedOrder = function(e) {
+	console.log(this);
+	console.log(e);
+	this.className = 'hidden';
+	console.log('Prueba desde arrAfuera');
 }
 
-// function handle_button_events() {
-// 	var edit_button = document.getElementById('edit_btn');
-// 	edit_button.addEventListener('click', editOrder)
-// }
-//
-// var editOrder = function() {
-// 	var orderResumeTable = document.getElementById('tabla_pedido');
-// 	var dataFromOrderResume = orderResumeTable.getElementsByTagName('td');
-// 	var editableInput = Array.from(dataFromOrderResume);
-// 	editableInput.map(function(td) {
-// 		td.children[0].className = 'edit_order';
-// 		td.children[1].className = 'hidden';
-// 		td.style.backgroundColor = '#fff';
-// 	});
-// }
 
-
+// ++++++++++++++++++++++++++++++++++++++++
+// IMPORTANTE
+// Pendiente cambiar object order, en vez de un array para los items y otro para la qty,
+// modificarlo para que quede un objecto, key para los items y values para las cantidades!
 
 
 
