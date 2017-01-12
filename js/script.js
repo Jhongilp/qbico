@@ -55,10 +55,9 @@ var inventory = {
 	}
 };
 
+// This will be update with ingresar_item function
 var order = {
-	i_item: 0, // Keep the count of items appened to the order table
-	items: [],
-	order_qty: []
+	i_item: 0, // Keep the count of items appened to the order table. Important to update_order
 }
 
 var _HTML = {
@@ -79,21 +78,23 @@ var checkInventory = function(item, qty) {
 
 function ingresar_item() {
 	var item = document.getElementById('referencia').value.toLowerCase();
-	var qty = document.getElementById('cantidad').value;
+	var qty = parseInt(document.getElementById('cantidad').value);
 	var item_available = checkInventory(item, qty); // --> true or false
 
 	if (item !== '' && qty > 0) {
-		item_available ? (
-			console.log('An item was added: ' + item),
-			order.items.push(item),
-			order.order_qty.push(qty),
-			generar_resumen(),
-			document.getElementById('referencia').value = '',
-			document.getElementById('cantidad').value = ''
-		) : (
-			alert('Item is not available or quantity exceeds the stock!')
-		)
-	} else { alert('Debe ingresar un item y su cantidad!')}
+		if (item_available) {
+			console.log('An item was added: ' + item);
+			order[item] = qty;
+			console.log(order);
+			generar_resumen(item, qty);
+			document.getElementById('referencia').value = '';
+			document.getElementById('cantidad').value = '';
+		} else {
+			alert('Item is not available or quantity exceeds the stock!');
+		}
+	} else {
+		alert('Debe ingresar un item y su cantidad!');
+	}
 }
 
 // Esta function realmente solo funciona para crear elements con clases :( !!!
@@ -118,8 +119,8 @@ function createElement(tag, attribute, text) {
 	return element;
 }
 
-function generar_resumen() {
-	if (order.items.length == 1) {
+function generar_resumen(item, qty) {
+	if (order.i_item == 0) {
 	// Add 'edit' and 'clear' buttons:
 		var edit_btn = createElement('a', 'button edit', 'Edit');
 		edit_btn.setAttribute('id', 'edit_btn');
@@ -132,9 +133,9 @@ function generar_resumen() {
 
 		table_resumen = crear_tabla(); // Returns the table to append to the DOM just for one time
 		_HTML.append(table_resumen, 'resume');
-		update_order();	// Append a <tr> every the "Ingresar" btn is clicked.
+		update_order(item, qty);	// Append a <tr> every the "Ingresar" btn is clicked.
 	} else {
-		update_order();
+		update_order(item, qty);
 	}
 }
 
@@ -157,7 +158,7 @@ function crear_tabla() {
 	return (div);
 }
 
-function update_order() {
+function update_order(itemOrder, qtyOrder) {
 	var row_item = document.createElement('tr');
 
 	var td_item = document.createElement('td');
@@ -166,10 +167,10 @@ function update_order() {
 	var editableInputItem = document.createElement('input');
 	editableInputItem.setAttribute('class', 'hidden');
 	editableInputItem.setAttribute('type', 'text');
-	editableInputItem.setAttribute('value', order.items[order.i_item]); // --> value of the index of the array inside the object 'order'.
+	editableInputItem.setAttribute('value', itemOrder);
 	// Above will only display if 'edit' botton is clicked
 	var item = document.createElement('div');
-	item.appendChild(document.createTextNode(order.items[order.i_item]));
+	item.appendChild(document.createTextNode(itemOrder));
 	td_item.appendChild(editableInputItem); // --> Only visible if 'edit' button was clicked
 	td_item.appendChild(item); // --> show this data by default
 
@@ -177,11 +178,11 @@ function update_order() {
 	var editableInputQty = document.createElement('input');
 	editableInputQty.setAttribute('class', 'hidden');
 	editableInputQty.setAttribute('type', 'text');
-	editableInputQty.setAttribute('value', order.order_qty[order.i_item]); // --> value of the index of the array inside the object 'order'.
+	editableInputQty.setAttribute('value', qtyOrder); // --> value of the index of the array inside the object 'order'.
 	// Above will only display if 'edit' botton is clicked
 
 	var qty = document.createElement('div');
-	qty.appendChild(document.createTextNode(order.order_qty[order.i_item]));
+	qty.appendChild(document.createTextNode(qtyOrder));
 	td_qty.appendChild(editableInputQty); // --> Only visible if 'edit' button was clicked
 	td_qty.appendChild(qty); // --> show this data by default
 
