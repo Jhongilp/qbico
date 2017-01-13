@@ -76,9 +76,19 @@ var checkInventory = function(item, qty) {
 	return stock;
 };
 
-function ingresar_item() {
-	var item = document.getElementById('referencia').value.toLowerCase();
-	var qty = parseInt(document.getElementById('cantidad').value);
+function ingresar_item(itemSubmit, qtySumit) {
+	console.log(arguments.length);
+	var item;
+	var qty;
+	if (arguments.length > 0) {
+		item = arguments[0];
+		qty = arguments[1];
+		console.log(item);
+		console.log(qty);
+	} else {
+		item = document.getElementById('referencia').value.toLowerCase();
+		qty = parseInt(document.getElementById('cantidad').value);
+	}
 	var item_available = checkInventory(item, qty); // --> true or false
 
 	if (item !== '' && qty > 0) {
@@ -86,9 +96,9 @@ function ingresar_item() {
 			var inOrderAlready = order.hasOwnProperty(item);
 			console.log(inOrderAlready);
 			if (inOrderAlready) {
-				order[item] += qty;
+				order[item] += parseInt(qty);
 			} else {
-				order[item] = qty;
+				order[item] = parseInt(qty);
 			}
 			console.log(order);
 			generar_resumen(item, qty);
@@ -104,14 +114,6 @@ function ingresar_item() {
 
 // Esta function realmente solo funciona para crear elements con clases :( !!!
 // Pendiente modificar para que se adapte según los argumentos
-
-/*  ++++++++++++++++++++++++++++++++++++++++
-	Modify createElement function as follows:
-	createElement {
-	id: create element with id attribute
-	class: create element with class attribute
-	}
-	  ++++++++++++++++++++++++++++++++++++++++ */
 
 function createElement(tag, attribute, text) {
 	var element = document.createElement(tag);
@@ -159,7 +161,6 @@ function crear_tabla() {
 	table.appendChild(tbody);
 	div.appendChild(table);
 	div.appendChild(button);
-	console.log(table);
 	return (div);
 }
 
@@ -199,19 +200,15 @@ function update_order(itemOrder, qtyOrder) {
 	order.i_item++;
 }
 
-
 function handle_button_events() {
 	var editionComplete = false;
 	var edit_button = document.getElementById('edit_btn');
-	var editedInput;
+	var editedInput; // Will be asigned with makeEditable()
 	edit_button.addEventListener('click', function() {
 		if (editionComplete) {
 			// var return the editedInput = td.children[0] and pass as argument to restartEditedOrder
 			// in order to update the order bedore printing again
-			// document.getElementById('resume').innerHTML = '';
 			restartEditedOrder(editedInput);
-			// console.log(editionComplete);
-			// alert('Usted termino de editar');
 		} else {
 			makeEditable();
 			editionComplete = true;
@@ -219,8 +216,6 @@ function handle_button_events() {
 		}
 	});
 }
-
-
 
 var makeEditable = function() {
 	var orderResumeTable = document.getElementById('tabla_pedido');
@@ -255,37 +250,20 @@ function restartEditedOrder(arrayToEdit) {
 	order.i_item = 0;
 	console.log(order);
 
-	// Trying to convert the array of editable inputs into an object :( !!!
-
+	// Collect the editable input
 	var orderPendingToUpdate = arrayToEdit.reduce(function(obj, input, i) {
-		var isAnItem = inventory.hasOwnProperty(input.value);
-		console.log(arrayToEdit[i].value);
-		if (isAnItem) {
-			obj[input.value] = 10;
+		if (i % 2 === 0) {
+			obj[input.value] = arrayToEdit[i + 1].value
 		}
 		return obj;
 	}, {});
-
-
 	console.log(orderPendingToUpdate);
 
-	for (var i in order) {
+	for (var i in orderPendingToUpdate) {
 		if(i !== 'i_item') {
 			console.log(i);
-			generar_resumen(i, order[i]);
+			// generar_resumen(i, orderPendingToUpdate[i]);
+			ingresar_item(i, orderPendingToUpdate[i]);
 		}
 	}
 }
-
-// ++++++++++++++++++++++++++++++++++++++++
-// IMPORTANTE
-// Pendiente cambiar object order, en vez de un array para los items y otro para la qty,
-// modificarlo para que quede un objecto, key para los items y values para las cantidades!
-
-
-
-
-
-// En cuanto a los objetos, ver la posibilidad de llevar el inventario desde los objectos y no desde los arrays
-// Por ejemplo, cuando el usuario ingresa, validar que la referencia exista y agregar la cantidad correspondiente
-// al value of the key: {"Cuñete": 100}, + cuñete : 100, entonces order.items["Cuñete"] agregarle 100 al pedido
