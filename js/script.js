@@ -83,8 +83,13 @@ function ingresar_item() {
 
 	if (item !== '' && qty > 0) {
 		if (item_available) {
-			console.log('An item was added: ' + item);
-			order[item] = qty;
+			var inOrderAlready = order.hasOwnProperty(item);
+			console.log(inOrderAlready);
+			if (inOrderAlready) {
+				order[item] += qty;
+			} else {
+				order[item] = qty;
+			}
 			console.log(order);
 			generar_resumen(item, qty);
 			document.getElementById('referencia').value = '';
@@ -196,9 +201,26 @@ function update_order(itemOrder, qtyOrder) {
 
 
 function handle_button_events() {
+	var editionComplete = false;
 	var edit_button = document.getElementById('edit_btn');
-	edit_button.addEventListener('click', makeEditable);
+	var editedInput;
+	edit_button.addEventListener('click', function() {
+		if (editionComplete) {
+			// var return the editedInput = td.children[0] and pass as argument to restartEditedOrder
+			// in order to update the order bedore printing again
+			// document.getElementById('resume').innerHTML = '';
+			restartEditedOrder(editedInput);
+			// console.log(editionComplete);
+			// alert('Usted termino de editar');
+		} else {
+			makeEditable();
+			editionComplete = true;
+			editedInput = makeEditable(); // --> Collect the editedInputs
+		}
+	});
 }
+
+
 
 var makeEditable = function() {
 	var orderResumeTable = document.getElementById('tabla_pedido');
@@ -217,33 +239,43 @@ var makeEditable = function() {
 		});
 		return inputData; // --> for test only
 	}
+	var readyToEdit = inputToUpdate();
+	return inputToUpdate(); // --> Invoke if have not been already
+	console.log(readyToEdit);
+}
 
-	var arrAfuera = inputToUpdate();
-	for (var i = 0; i < arrAfuera.length; i++) {
-		arrAfuera[i].addEventListener('keydown', function(e) {
-			console.log(e.keyCode);
-			if (e.keyCode === 9) {
-				console.log(this.className);
-				console.log('This item is in the array: ' + i);
+function restartEditedOrder(arrayToEdit) {
 
-				// this.classList.remove('edit_order');
-				alert(this.value);
-			}
-			// console.log(this);
-			// this.classList.remove('edit_order');
-		});
+	var cmdButtons = document.getElementById('cmd-buttons');
+	var editButton = document.getElementById('edit_btn');
+	var clearButton = document.getElementById('clear_btn');
+	cmdButtons.removeChild(editButton);
+	cmdButtons.removeChild(clearButton);
+	document.getElementById('resume').innerHTML = '';
+	order.i_item = 0;
+	console.log(order);
+
+	// Trying to convert the array of editable inputs into an object :( !!!
+
+	var orderPendingToUpdate = arrayToEdit.reduce(function(obj, input, i) {
+		var isAnItem = inventory.hasOwnProperty(input.value);
+		console.log(arrayToEdit[i].value);
+		if (isAnItem) {
+			obj[input.value] = 10;
+		}
+		return obj;
+	}, {});
+
+
+	console.log(orderPendingToUpdate);
+
+	for (var i in order) {
+		if(i !== 'i_item') {
+			console.log(i);
+			generar_resumen(i, order[i]);
+		}
 	}
-	// inputToUpdate(); // --> Invoke if have not been already
-	console.log(arrAfuera);
 }
-
-var updateEditedOrder = function(e) {
-	console.log(this);
-	console.log(e);
-	this.className = 'hidden';
-	console.log('Prueba desde arrAfuera');
-}
-
 
 // ++++++++++++++++++++++++++++++++++++++++
 // IMPORTANTE
