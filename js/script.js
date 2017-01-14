@@ -131,16 +131,11 @@ function createElement(tag, attribute, text) {
 
 function generar_resumen(item, qty) {
 	if (order.i_item == 0) {
-	// Add 'edit' and 'clear' buttons:
+	// Add 'edit' button:
 		var edit_btn = createElement('a', 'button edit', 'Edit');
 		edit_btn.setAttribute('id', 'edit_btn');
-		var clear_btn = createElement('a', 'button clear', 'Clear');
-		clear_btn.setAttribute('id', 'clear_btn');
 		_HTML.append(edit_btn, 'cmd-buttons');
-		_HTML.append(clear_btn, 'cmd-buttons');
-		// --> buttons were appended
 		handle_button_events(); // add functions to 'edit' and 'clear' buttons
-
 		table_resumen = crear_tabla(); // Returns the table to append to the DOM just for one time
 		_HTML.append(table_resumen, 'resume');
 		update_order(item, qty);	// Append a <tr> every the "Ingresar" btn is clicked.
@@ -152,7 +147,17 @@ function generar_resumen(item, qty) {
 function crear_tabla() {
 	var div = document.createElement('div');
 	div.setAttribute('class', 'pedido');
-	var button = createElement('a', 'button calcular', 'Calcular');
+
+	// cmdButtonsbuttom
+	var divClearCalculeBtns = document.createElement('div');
+	divClearCalculeBtns.setAttribute('id', 'clearCalcuCmd')
+	var clearBtn = createElement('a', 'button clear', 'Clear');
+	clearBtn.setAttribute('id', 'clear_btn');
+	var calcularBtn = createElement('a', 'button calcular', 'Calcular');
+	calcularBtn.setAttribute('id', 'calcularBtn');
+	divClearCalculeBtns.appendChild(clearBtn);
+	divClearCalculeBtns.appendChild(calcularBtn);
+
 	var table = document.createElement('table');
 	// Create and append the head of the table
 	var thead = document.createElement('thead');
@@ -163,7 +168,7 @@ function crear_tabla() {
 
 	table.appendChild(tbody);
 	div.appendChild(table);
-	div.appendChild(button);
+	div.appendChild(divClearCalculeBtns);
 	return (div);
 }
 
@@ -246,9 +251,7 @@ function restartEditedOrder(arrayToEdit) {
 
 	var cmdButtons = document.getElementById('cmd-buttons');
 	var editButton = document.getElementById('edit_btn');
-	var clearButton = document.getElementById('clear_btn');
 	cmdButtons.removeChild(editButton);
-	cmdButtons.removeChild(clearButton);
 	document.getElementById('resume').innerHTML = '';
 	order.i_item = 0;
 	console.log(order);
@@ -275,4 +278,11 @@ function restartEditedOrder(arrayToEdit) {
 			ingresar_item(i, orderPendingToUpdate[i]);
 		}
 	}
+	// Reset the item from order if it is not longer in orderPendingToUpdate
+	for (var j in order) {
+		if (!orderPendingToUpdate[j]) {
+			delete order[j];
+		}
+	}
+	console.log(order);
 }
