@@ -9,7 +9,9 @@ function initialize() {
 			ingresar_item();
 		}
 	});
-	btn.addEventListener('click', ingresar_item);
+	btn.addEventListener('click', function() {
+			ingresar_item();
+	});
 }
 
 var inventory = {
@@ -88,6 +90,7 @@ function ingresar_item(itemSubmit, qtySumit) {
 	} else {
 		item = document.getElementById('referencia').value.toLowerCase();
 		qty = parseInt(document.getElementById('cantidad').value);
+		console.log(qty);
 	}
 	var item_available = checkInventory(item, qty); // --> true or false
 
@@ -252,8 +255,15 @@ function restartEditedOrder(arrayToEdit) {
 
 	// Collect the editable input
 	var orderPendingToUpdate = arrayToEdit.reduce(function(obj, input, i) {
+		var isInOrderAlready = order.hasOwnProperty(input.value);
 		if (i % 2 === 0) {
-			obj[input.value] = arrayToEdit[i + 1].value
+			var qtyInt = arrayToEdit[i + 1].value;
+			if (!obj[input.value.toLowerCase()]) {
+				order[input.value] = 0;
+				obj[input.value.toLowerCase()] = parseInt(qtyInt);
+			} else {
+				obj[input.value.toLowerCase()] += parseInt(qtyInt);
+			}
 		}
 		return obj;
 	}, {});
@@ -261,7 +271,6 @@ function restartEditedOrder(arrayToEdit) {
 
 	for (var i in orderPendingToUpdate) {
 		if(i !== 'i_item') {
-			console.log(i);
 			// generar_resumen(i, orderPendingToUpdate[i]);
 			ingresar_item(i, orderPendingToUpdate[i]);
 		}

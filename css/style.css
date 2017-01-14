@@ -178,6 +178,7 @@ input[type='number'] {
 .col-1 table tbody td:nth-child(1) {
 	padding-left: 0.5em;
 	text-align: left;
+	text-transform: capitalize;
 	/*background-color: #4a89ca;*/
 }
 
