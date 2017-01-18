@@ -14,6 +14,18 @@ function initialize() {
 	});
 }
 
+var pallet = {
+	largo: 120,
+	ancho: 100,
+		alto: 20
+};
+
+var container = {
+	largo: 589,
+	ancho: 235,
+	alto: 210
+};
+
 var inventory = {
 	cuñete: {
 		cantidad: 1500,
@@ -23,6 +35,9 @@ var inventory = {
 			l: 26,
 			w: 26,
 			h: 36
+		},
+		levelByPallet: function () {
+			return container.alto / this.measure.h;
 		}
 	},
 	medio_cuñete: {
@@ -56,7 +71,14 @@ var inventory = {
 		}
 	}
 };
+console.log(inventory.cuñete.measure.h);
 
+// To be continue
+function calcular(order) {
+
+}
+
+// console.log(inventory.cuñete.levelByPallet);
 // This will be update with ingresar_item function
 var order = {
 	i_item: 0, // Keep the count of items appened to the order table. Important to update_order
