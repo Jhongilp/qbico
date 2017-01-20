@@ -14,69 +14,103 @@ function initialize() {
 	});
 }
 
-var pallet = {
-	largo: 120,
-	ancho: 100,
-		alto: 20
-};
-
-var container = {
-	largo: 589,
-	ancho: 235,
-	alto: 210
-};
-
 var inventory = {
 	cuñete: {
 		cantidad: 1500,
 		color: ['yellow', 'blue', 'green', 'white'],
-		weight: 27,
+		weight: 27.1,
 		measure: {
 			l: 26,
 			w: 26,
 			h: 36
 		},
-		levelByPallet: function () {
-			return container.alto / this.measure.h;
-		}
 	},
 	medio_cuñete: {
 		cantidad: 2000,
 		color: ['yellow', 'blue', 'green', 'white'],
-		weight: 20,
+		weight:14,
 		measure: {
-			l: 18,
-			w: 18,
+			l: 24,
+			w: 25,
 			h: 25
 		}
 	},
 	galon: {
 		cantidad: 5000,
 		color: ['yellow', 'blue', 'green', 'white'],
-		weight: 10,
+		weight: 5.5,
 		measure: {
-			l: 10,
-			w: 10,
+			l: 18.3,
+			w: 18.3,
 			h: 20
 		}
 	},
 	bulto: {
 		cantidad: 1000,
 		color: ['yellow', 'blue', 'green', 'white'],
-		weight: 40,
+		weight: 26,
 		measure: {
-			l: 30,
-			w: 20,
-			h: 10
+			l: 60,
+			w: 40,
+			h: 9
 		}
 	}
 };
 console.log(inventory.cuñete.measure.h);
 
 // To be continue
-function calcular(order) {
+function getUnitsByPallet(presentation) {
+	var container = {
+		large: 589,
+		width: 235,
+		height: 210
+	};
+	var pallet = {
+		large: 120,
+		width: 100,
+		height: 20
+	};
+	var largeItem = inventory[presentation].measure.l;
+	var widthItem = inventory[presentation].measure.w;
+	var heightItem = inventory[presentation].measure.h;
+	var unitsLong = Math.floor(pallet.large / largeItem);
+	var unitsWidth = Math.floor(pallet.width / widthItem);
+	var levelsOfPallet = Math.floor((container.height - pallet.height) / heightItem);
+	var itemIsRounded = largeItem === widthItem;
+	console.log(itemIsRounded);
+	var unitsByFloorOfPallet;
+	function getUnitsByFloorOfPallet(item) {
+			var min = Math.min(inventory[item].measure.l, inventory[item].measure.w);
+			var max = Math.max(inventory[item].measure.l, inventory[item].measure.w);
+			if (min + max <= pallet.width) {
+				var h = Math.floor(pallet.large / max);
+				var w = Math.floor(pallet.large / min);
+				return h + w;
+			}
+	}
+	if (itemIsRounded) {
+		unitsByFloorOfPallet = unitsLong * unitsWidth;
+	} else {
+		unitsByFloorOfPallet = getUnitsByFloorOfPallet(presentation);
+	}
 
+	var unitsByPallet = unitsByFloorOfPallet * levelsOfPallet;
+	console.log(unitsLong);
+	console.log(unitsWidth);
+	console.log(levelsOfPallet);
+	console.log(unitsByFloorOfPallet);
+	return 'This item have: ' + unitsByPallet + ' units by pallet.';
 }
+
+function cubi(presentation) {
+	var unitsByPallet = getUnitsByPallet(presentation);
+	return unitsByPallet;
+}
+
+function calcular() {
+	// alert('Prueba btnCalcular');
+	console.log(cubi('galon'));
+};
 
 // console.log(inventory.cuñete.levelByPallet);
 // This will be update with ingresar_item function
@@ -157,13 +191,13 @@ function generar_resumen(item, qty) {
 		var edit_btn = createElement('a', 'button edit', 'Edit');
 		edit_btn.setAttribute('id', 'edit_btn');
 		_HTML.append(edit_btn, 'cmd-buttons');
-		handle_button_events(); // add functions to 'edit' and 'clear' buttons
 		table_resumen = crear_tabla(); // Returns the table to append to the DOM just for one time
 		_HTML.append(table_resumen, 'resume');
 		update_order(item, qty);	// Append a <tr> every the "Ingresar" btn is clicked.
 	} else {
 		update_order(item, qty);
 	}
+	handle_button_events(); // add functions to 'edit' and 'clear' buttons
 }
 
 function crear_tabla() {
@@ -245,6 +279,11 @@ function handle_button_events() {
 			editedInput = makeEditable(); // --> Collect the editedInputs
 		}
 	});
+	// calcularBtn
+	btnCalcular = document.getElementById('calcularBtn');
+	btnCalcular.onclick = function() {
+		calcular();
+	};
 }
 
 var makeEditable = function() {
