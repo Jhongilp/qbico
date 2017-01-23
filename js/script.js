@@ -31,7 +31,7 @@ var inventory = {
 		weight:14,
 		measure: {
 			l: 24,
-			w: 25,
+			w: 24,
 			h: 25
 		}
 	},
@@ -59,7 +59,7 @@ var inventory = {
 console.log(inventory.cuñete.measure.h);
 
 // To be continue
-function getUnitsByPallet(presentation) {
+function createItem(presentation) {
 	var container = {
 		large: 589,
 		width: 235,
@@ -70,49 +70,57 @@ function getUnitsByPallet(presentation) {
 		width: 100,
 		height: 20
 	};
+	// measures in cm for the presentation of the item[galon, cuñete, etc]
 	var largeItem = inventory[presentation].measure.l;
 	var widthItem = inventory[presentation].measure.w;
 	var heightItem = inventory[presentation].measure.h;
+	// get how many units for pallet
 	var unitsLong = Math.floor(pallet.large / largeItem);
 	var unitsWidth = Math.floor(pallet.width / widthItem);
-	var levelsOfPallet = Math.floor((container.height - pallet.height) / heightItem);
+	var levelsOfPallet = Math.floor((container.height - pallet.height) / heightItem); // Can't be higher than container
 	var itemIsRounded = largeItem === widthItem;
 	console.log(itemIsRounded);
-	var unitsByFloorOfPallet;
-	function getUnitsByFloorOfPallet(item) {
-			var min = Math.min(inventory[item].measure.l, inventory[item].measure.w);
-			var max = Math.max(inventory[item].measure.l, inventory[item].measure.w);
-			if (min + max <= pallet.width) {
-				var h = Math.floor(pallet.large / max);
-				var w = Math.floor(pallet.large / min);
-				return h + w;
+	var getUnitsByFloorOfPallet = function(item) {
+			if (itemIsRounded) {
+				return unitsLong * unitsWidth;
+			} else {
+				var min = Math.min(inventory[item].measure.l, inventory[item].measure.w);
+				var max = Math.max(inventory[item].measure.l, inventory[item].measure.w);
+				if (min + max <= pallet.width) {
+					var h = Math.floor(pallet.large / max);
+					var w = Math.floor(pallet.large / min);
+					return h + w;
+				}
 			}
-	}
-	if (itemIsRounded) {
-		unitsByFloorOfPallet = unitsLong * unitsWidth;
-	} else {
-		unitsByFloorOfPallet = getUnitsByFloorOfPallet(presentation);
-	}
-
-	var unitsByPallet = unitsByFloorOfPallet * levelsOfPallet;
+	};
 	console.log(unitsLong);
 	console.log(unitsWidth);
 	console.log(levelsOfPallet);
-	console.log(unitsByFloorOfPallet);
-	return 'This item have: ' + unitsByPallet + ' units by pallet.';
-}
+	console.log(getUnitsByFloorOfPallet(presentation));
+
+	return {
+		unitsByFloorOfPallet: function(presentation) {
+			return getUnitsByFloorOfPallet(presentation);
+		},
+		unitsByPallet: function(presentation) {
+			return getUnitsByFloorOfPallet(presentation) * levelsOfPallet;
+		}
+	};
+};
 
 function cubi(presentation) {
-	var unitsByPallet = getUnitsByPallet(presentation);
-	return unitsByPallet;
+	var galon = createItem(presentation);
+	return galon;
 }
 
 function calcular() {
 	// alert('Prueba btnCalcular');
+	console.log(cubi('cuñete'));
 	console.log(cubi('galon'));
+	console.log(cubi('bulto'));
+	console.log(cubi('medio_cuñete'));
 };
 
-// console.log(inventory.cuñete.levelByPallet);
 // This will be update with ingresar_item function
 var order = {
 	i_item: 0, // Keep the count of items appened to the order table. Important to update_order
