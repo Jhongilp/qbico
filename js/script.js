@@ -56,9 +56,7 @@ var inventory = {
 		}
 	}
 };
-console.log(inventory.cuñete.measure.h);
 
-// To be continue
 function createItem(presentation) {
 	var container = {
 		large: 589,
@@ -79,7 +77,6 @@ function createItem(presentation) {
 	var unitsWidth = Math.floor(pallet.width / widthItem);
 	var levelsOfPallet = Math.floor((container.height - pallet.height) / heightItem); // Can't be higher than container
 	var itemIsRounded = largeItem === widthItem;
-	console.log(itemIsRounded);
 	var getUnitsByFloorOfPallet = function(item) {
 			if (itemIsRounded) {
 				return unitsLong * unitsWidth;
@@ -93,32 +90,54 @@ function createItem(presentation) {
 				}
 			}
 	};
-	console.log(unitsLong);
-	console.log(unitsWidth);
-	console.log(levelsOfPallet);
-	console.log(getUnitsByFloorOfPallet(presentation));
-
+	// Methods of cubi
 	return {
-		unitsByFloorOfPallet: function(presentation) {
-			return getUnitsByFloorOfPallet(presentation);
-		},
-		unitsByPallet: function(presentation) {
-			return getUnitsByFloorOfPallet(presentation) * levelsOfPallet;
+		completePallet: function(qty) {
+			return Math.floor(qty / (getUnitsByFloorOfPallet(presentation) * levelsOfPallet));
 		}
 	};
 };
 
 function cubi(presentation) {
-	var galon = createItem(presentation);
-	return galon;
+	var producto = createItem(presentation);
+	// var palletsCompletos = producto.completePallet(order[presentation]);
+	// var rows, cols;
+	// for (cols = 0; cols < order.length - 1; cols++) {
+	//
+	// }
+	return producto.completePallet(order[presentation]);
 }
 
 function calcular() {
-	// alert('Prueba btnCalcular');
-	console.log(cubi('cuñete'));
-	console.log(cubi('galon'));
-	console.log(cubi('bulto'));
-	console.log(cubi('medio_cuñete'));
+	var crearRelacionPallets = function() {
+		var tablaPallets = document.createElement('div');
+		tablaPallets.setAttribute('id', 'tablaPallets');
+		var encabezado = document.createElement('div');
+		var nombreItems = document.createElement('div');
+		nombreItems.appendChild(document.createTextNode('Item'));
+		var unidadesCol = document.createElement('div');
+		unidadesCol.appendChild(document.createTextNode('Unidades'));
+		var numPalletsCompletos = document.createElement('div');
+		numPalletsCompletos.appendChild(document.createTextNode('# Pallets Completos'));
+		var unidadesPendientes = document.createElement('div');
+		unidadesPendientes.appendChild(document.createTextNode('Unidades Pendientes por cubicar'));
+		var metrosCubicos = document.createElement('div');
+		metrosCubicos.appendChild(document.createTextNode('M3 Pallets Completos'));
+		encabezado.appendChild(nombreItems);
+		encabezado.appendChild(unidadesCol);
+		encabezado.appendChild(numPalletsCompletos);
+		encabezado.appendChild(unidadesPendientes);
+		encabezado.appendChild(metrosCubicos);
+		tablaPallets.appendChild(encabezado);
+		return tablaPallets;
+	}
+	_HTML.append(crearRelacionPallets(), 'pallet');
+	for (prop in order) {
+		// debugger;
+		if (inventory[prop]) {
+				console.log(cubi(prop));
+		}
+	}
 };
 
 // This will be update with ingresar_item function
@@ -143,31 +162,25 @@ var checkInventory = function(item, qty) {
 };
 
 function ingresar_item(itemSubmit, qtySumit) {
-	console.log(arguments.length);
 	var item;
 	var qty;
 	if (arguments.length > 0) {
 		item = arguments[0];
 		qty = arguments[1];
-		console.log(item);
-		console.log(qty);
 	} else {
 		item = document.getElementById('referencia').value.toLowerCase();
 		qty = parseInt(document.getElementById('cantidad').value);
-		console.log(qty);
 	}
 	var item_available = checkInventory(item, qty); // --> true or false
 
 	if (item !== '' && qty > 0) {
 		if (item_available) {
 			var inOrderAlready = order.hasOwnProperty(item);
-			console.log(inOrderAlready);
 			if (inOrderAlready) {
 				order[item] += parseInt(qty);
 			} else {
 				order[item] = parseInt(qty);
 			}
-			console.log(order);
 			generar_resumen(item, qty);
 			document.getElementById('referencia').value = '';
 			document.getElementById('cantidad').value = '';
@@ -268,7 +281,6 @@ function update_order(itemOrder, qtyOrder) {
 	row_item.appendChild(td_item);
 	row_item.appendChild(td_qty);
 	_HTML.append(row_item, 'tabla_pedido');
-	console.log(order.i_item);
 	order.i_item++;
 }
 
@@ -313,7 +325,6 @@ var makeEditable = function() {
 	}
 	var readyToEdit = inputToUpdate();
 	return inputToUpdate(); // --> Invoke if have not been already
-	console.log(readyToEdit);
 }
 
 function restartEditedOrder(arrayToEdit) {
@@ -323,7 +334,6 @@ function restartEditedOrder(arrayToEdit) {
 	cmdButtons.removeChild(editButton);
 	document.getElementById('resume').innerHTML = '';
 	order.i_item = 0;
-	console.log(order);
 
 	// Collect the editable input
 	var orderPendingToUpdate = arrayToEdit.reduce(function(obj, input, i) {
@@ -339,7 +349,6 @@ function restartEditedOrder(arrayToEdit) {
 		}
 		return obj;
 	}, {});
-	console.log(orderPendingToUpdate);
 
 	for (var i in orderPendingToUpdate) {
 		if(i !== 'i_item') {
@@ -353,5 +362,4 @@ function restartEditedOrder(arrayToEdit) {
 			delete order[j];
 		}
 	}
-	console.log(order);
 }
