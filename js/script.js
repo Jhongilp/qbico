@@ -113,6 +113,7 @@ function calcular() {
 		var tablaPallets = document.createElement('div');
 		tablaPallets.setAttribute('id', 'tablaPallets');
 		var encabezado = document.createElement('div');
+		encabezado.classList.add('row', 'theader');
 		var nombreItems = document.createElement('div');
 		nombreItems.appendChild(document.createTextNode('Item'));
 		var unidadesCol = document.createElement('div');
@@ -301,7 +302,7 @@ function handle_button_events() {
 	});
 	// calcularBtn
 	btnCalcular = document.getElementById('calcularBtn');
-	var notClickedAlready = true;
+	var notClickedAlready = true; // To prevent the user clicked several times and append repeated elements to the DOM
 	btnCalcular.onclick = function() {
 		if (notClickedAlready) {
 				calcular();

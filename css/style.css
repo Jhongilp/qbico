@@ -211,6 +211,22 @@ canvas {
 	height: 100%;
 }
 
+#tablaPallets {
+	display: flex;
+}
+
+.row {
+	display: flex;
+}
+
+.row div {
+	flex-direction: column;
+	font-size: 0.8em;
+  width: 20%;
+  border: 1px solid #fff;
+}
+
+
 /*++++++++++++++++++++++++++++
 	Media Queries
 +++++++++++++++++++++++++++++++*/
