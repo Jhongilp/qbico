@@ -301,8 +301,12 @@ function handle_button_events() {
 	});
 	// calcularBtn
 	btnCalcular = document.getElementById('calcularBtn');
+	var notClickedAlready = true;
 	btnCalcular.onclick = function() {
-		calcular();
+		if (notClickedAlready) {
+				calcular();
+				notClickedAlready = false;
+		}
 	};
 }
 
