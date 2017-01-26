@@ -112,26 +112,32 @@ function calcular() {
 	var crearRelacionPallets = function() {
 		var tablaPallets = document.createElement('div');
 		tablaPallets.setAttribute('id', 'tablaPallets');
-		var encabezado = document.createElement('div');
-		encabezado.classList.add('row', 'theader');
-		var nombreItems = document.createElement('div');
-		nombreItems.appendChild(document.createTextNode('Item'));
-		var unidadesCol = document.createElement('div');
-		unidadesCol.appendChild(document.createTextNode('Unidades'));
-		var numPalletsCompletos = document.createElement('div');
-		numPalletsCompletos.appendChild(document.createTextNode('# Pallets Completos'));
-		var unidadesPendientes = document.createElement('div');
-		unidadesPendientes.appendChild(document.createTextNode('Unidades Pendientes por cubicar'));
-		var metrosCubicos = document.createElement('div');
-		metrosCubicos.appendChild(document.createTextNode('M3 Pallets Completos'));
-		encabezado.appendChild(nombreItems);
-		encabezado.appendChild(unidadesCol);
-		encabezado.appendChild(numPalletsCompletos);
-		encabezado.appendChild(unidadesPendientes);
-		encabezado.appendChild(metrosCubicos);
-		tablaPallets.appendChild(encabezado);
+		var titlesHeader = ['Item', 'Unidades', '#Pallets completos', 'Unidades pendientes por cubicar', 'M3 Pallets completos'];
+		var title = 0;
+		var row = 0;
+		var column, td, text, data;
+		for (title; title < titlesHeader.length; title++) {
+			column = document.createElement('div');
+			var colTableHeader = document.createElement('div');
+			text = document.createTextNode(titlesHeader[title]);
+			// debugger;
+			colTableHeader.appendChild(text);
+			column.appendChild(colTableHeader);
+			for (prop in order) { // order.length - 1 because i_item can´t be taken in mind.
+				if (prop !== 'i_item') {
+					td = document.createElement('div');
+					data = document.createTextNode(prop);
+					console.log(prop);
+					td.appendChild(data);
+					column.appendChild(td);
+				}
+			}
+			console.log(row);
+		}
+		console.log(title);
+		tablaPallets.appendChild(column);
 		return tablaPallets;
-	}
+		}
 	_HTML.append(crearRelacionPallets(), 'pallet');
 	for (prop in order) {
 		// debugger;
