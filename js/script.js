@@ -123,6 +123,7 @@ function calcular() {
 			// debugger;
 			colTableHeader.appendChild(text);
 			column.appendChild(colTableHeader);
+			debugger;
 			for (prop in order) { // order.length - 1 because i_item can´t be taken in mind.
 				if (prop !== 'i_item') {
 					td = document.createElement('div');
@@ -132,10 +133,11 @@ function calcular() {
 					column.appendChild(td);
 				}
 			}
-			console.log(row);
+			// console.log(row);
+			tablaPallets.appendChild(column);
 		}
 		console.log(title);
-		tablaPallets.appendChild(column);
+
 		return tablaPallets;
 		}
 	_HTML.append(crearRelacionPallets(), 'pallet');
