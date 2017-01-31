@@ -100,11 +100,7 @@ function createItem(presentation) {
 
 function cubi(presentation) {
 	var producto = createItem(presentation);
-	// var palletsCompletos = producto.completePallet(order[presentation]);
-	// var rows, cols;
-	// for (cols = 0; cols < order.length - 1; cols++) {
-	//
-	// }
+
 	return producto.completePallet(order[presentation]);
 }
 
@@ -116,26 +112,36 @@ function calcular() {
 		var title = 0;
 		var row = 0;
 		var column, td, text, data;
+		var encabezado = document.createElement('div');
+		encabezado.setAttribute('class', 'row');
 		for (title; title < titlesHeader.length; title++) {
-			column = document.createElement('div');
-			var colTableHeader = document.createElement('div');
-			text = document.createTextNode(titlesHeader[title]);
-			// debugger;
-			colTableHeader.appendChild(text);
-			column.appendChild(colTableHeader);
-			debugger;
-			for (prop in order) { // order.length - 1 because i_item can´t be taken in mind.
-				if (prop !== 'i_item') {
-					td = document.createElement('div');
-					data = document.createTextNode(prop);
-					console.log(prop);
-					td.appendChild(data);
-					column.appendChild(td);
-				}
-			}
-			// console.log(row);
-			tablaPallets.appendChild(column);
+			var divHeader = document.createElement('div');
+			var textTitle = document.createTextNode(titlesHeader[title]);
+			divHeader.appendChild(textTitle);
+			encabezado.appendChild(divHeader);
 		}
+		tablaPallets.appendChild(encabezado);
+		// for (title; title < titlesHeader.length; title++) {
+		// 	column = document.createElement('div');
+		// 	var colTableHeader = document.createElement('div');
+		// 	text = document.createTextNode(titlesHeader[title]);
+		// 	// debugger;
+		// 	colTableHeader.appendChild(text);
+		// 	column.appendChild(colTableHeader);
+		// 	// debugger;
+		// 	// for (prop in order) { // order.length - 1 because i_item can´t be taken in mind.
+		// 	// 	if (prop !== 'i_item') {
+		// 	// 		td = document.createElement('div');
+		// 	// 		data = document.createTextNode(prop);
+		// 	// 		console.log(prop);
+		// 	// 		td.appendChild(data);
+		// 	// 		column.appendChild(td);
+		// 	// 	}
+		// 	// }
+		//
+		// 	// console.log(row);
+		// 	tablaPallets.appendChild(column);
+		// }
 		console.log(title);
 
 		return tablaPallets;
