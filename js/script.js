@@ -121,34 +121,37 @@ function calcular() {
 			encabezado.appendChild(divHeader);
 		}
 		tablaPallets.appendChild(encabezado);
-		// for (title; title < titlesHeader.length; title++) {
-		// 	column = document.createElement('div');
-		// 	var colTableHeader = document.createElement('div');
-		// 	text = document.createTextNode(titlesHeader[title]);
-		// 	// debugger;
-		// 	colTableHeader.appendChild(text);
-		// 	column.appendChild(colTableHeader);
-		// 	// debugger;
-		// 	// for (prop in order) { // order.length - 1 because i_item can´t be taken in mind.
-		// 	// 	if (prop !== 'i_item') {
-		// 	// 		td = document.createElement('div');
-		// 	// 		data = document.createTextNode(prop);
-		// 	// 		console.log(prop);
-		// 	// 		td.appendChild(data);
-		// 	// 		column.appendChild(td);
-		// 	// 	}
-		// 	// }
+		// Another loop for the data??? Pendiente completar
+		var bodyTable = document.createElement('div');
+		bodyTable.setAttribute('class', 'columnPallet');
+		for (prop in order) {
+			if (inventory[prop]) {
+				var rowData = document.createElement('div');
+				rowData.setAttribute('class', 'row');
+				var divDataRow = document.createElement('div');
+				divDataRow.appendChild(document.createTextNode('xxx'));
+				rowData.appendChild(divDataRow);
+				bodyTable.appendChild(rowData);
+			}
+		}
+		tablaPallets.appendChild(bodyTable);
+		// for (var j = 0; j < titlesHeader.length; j++) {
+		// 	var rowData = document.createElement('div');
+		// 	rowData.setAttribute('class', 'row');
 		//
-		// 	// console.log(row);
-		// 	tablaPallets.appendChild(column);
+		// 	var divData = document.createElement('div');
+		// 	divData.appendChild(document.createTextNode('xxx'));
+		//
 		// }
+
 		console.log(title);
 
 		return tablaPallets;
-		}
+	}
+
 	_HTML.append(crearRelacionPallets(), 'pallet');
+
 	for (prop in order) {
-		// debugger;
 		if (inventory[prop]) {
 				console.log(cubi(prop));
 		}
