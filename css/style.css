@@ -213,6 +213,7 @@ canvas {
 
 #tablaPallets {
 	display: flex;
+	flex-direction: column;
 }
 
 .row {

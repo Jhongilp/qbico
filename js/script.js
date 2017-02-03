@@ -126,36 +126,29 @@ function calcular() {
 		bodyTable.setAttribute('class', 'columnPallet');
 		for (prop in order) {
 			if (inventory[prop]) {
+				cubi(prop);
+				console.log(prop);
 				var rowData = document.createElement('div');
 				rowData.setAttribute('class', 'row');
-				var divDataRow = document.createElement('div');
-				divDataRow.appendChild(document.createTextNode('xxx'));
-				rowData.appendChild(divDataRow);
+				for (var j = 0; j < titlesHeader.length; j++) {
+					var divDataRow = document.createElement('div');
+					divDataRow.appendChild(document.createTextNode('xxx'));
+					rowData.appendChild(divDataRow);
+				}
 				bodyTable.appendChild(rowData);
 			}
 		}
 		tablaPallets.appendChild(bodyTable);
-		// for (var j = 0; j < titlesHeader.length; j++) {
-		// 	var rowData = document.createElement('div');
-		// 	rowData.setAttribute('class', 'row');
-		//
-		// 	var divData = document.createElement('div');
-		// 	divData.appendChild(document.createTextNode('xxx'));
-		//
-		// }
-
-		console.log(title);
-
 		return tablaPallets;
 	}
 
 	_HTML.append(crearRelacionPallets(), 'pallet');
 
-	for (prop in order) {
-		if (inventory[prop]) {
-				console.log(cubi(prop));
-		}
-	}
+	// for (prop in order) {
+	// 	if (inventory[prop]) {
+	// 			console.log(cubi(prop));
+	// 	}
+	// }
 };
 
 // This will be update with ingresar_item function
