@@ -94,6 +94,9 @@ function createItem(presentation) {
 	console.log(getUnitsByFloorOfPallet(presentation));
 	console.log(getUnitsByFloorOfPallet(presentation) * levelsOfPallet);
 	return {
+		unitsByPallets: function() {
+			return getUnitsByFloorOfPallet(presentation) * levelsOfPallet;
+		},
 		completePallet: function(qty) {
 			return Math.floor(qty / (getUnitsByFloorOfPallet(presentation) * levelsOfPallet));
 		}
@@ -128,17 +131,21 @@ function calcular() {
 		bodyTable.setAttribute('class', 'columnPallet');
 		for (prop in order) {
 			if (inventory[prop]) {
-				// cubi(prop);
-				// console.log(prop);
 				var item = createItem(prop);
-				var itemMethods = [prop, "u", "pc", "upc", "m3"];
+				var name = prop;
+				var cantidad = order[prop];
+				var palletsCompletos = item.completePallet(order[prop]);
+				var unidadesPendienteCubicar = function(qty) {
+					return (
+						cantidad - (palletsCompletos * item.unitsByPallets())
+					);
+				}
+				var itemMethods = [name, cantidad, palletsCompletos, unidadesPendienteCubicar(cantidad), "m3"];
 				var rowData = document.createElement('div');
 				rowData.setAttribute('class', 'row');
 				for (var j = 0; j < titlesHeader.length; j++) {
 					var divDataRow = document.createElement('div');
 					var contenido = itemMethods[j];
-					// console.log(cubi(prop));
-					// debugger;
 					divDataRow.appendChild(document.createTextNode(contenido));
 					rowData.appendChild(divDataRow);
 				}
