@@ -94,6 +94,13 @@ function createItem(presentation) {
 	console.log(getUnitsByFloorOfPallet(presentation));
 	console.log(getUnitsByFloorOfPallet(presentation) * levelsOfPallet);
 	return {
+		metroCubicoPallet: function() {
+			return ((pallet.large / 100) * (pallet.width / 100) * (pallet.height / 100));
+		},
+		getM3: function() {
+			// Cubic meters: large, width and high convert to meters and then multiplied to ge M3
+			return (inventory[presentation].measure.l / 100) * (inventory[presentation].measure.w / 100) * (inventory[presentation].measure.h / 100);
+		},
 		unitsByPallets: function() {
 			return getUnitsByFloorOfPallet(presentation) * levelsOfPallet;
 		},
@@ -140,7 +147,19 @@ function calcular() {
 						cantidad - (palletsCompletos * item.unitsByPallets())
 					);
 				}
-				var itemMethods = [name, cantidad, palletsCompletos, unidadesPendienteCubicar(cantidad), "m3"];
+				var metrosCubicosCompletos = function() {
+					var metroCubicoUnidad = item.getM3();
+					var unidades = cantidad - unidadesPendienteCubicar(cantidad);
+					var metroCubicoPallets = palletsCompletos * item.metroCubicoPallet();
+					return ((metroCubicoUnidad * unidades) + metroCubicoPallets).toFixed(2);
+				}
+				var itemMethods = [
+					name,
+					cantidad,
+					palletsCompletos,
+					unidadesPendienteCubicar(cantidad),
+					metrosCubicosCompletos()];
+
 				var rowData = document.createElement('div');
 				rowData.setAttribute('class', 'row');
 				for (var j = 0; j < titlesHeader.length; j++) {
