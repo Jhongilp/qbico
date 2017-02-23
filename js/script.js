@@ -134,8 +134,6 @@ function calcular() {
 		}
 		tablaPallets.appendChild(encabezado);
 		// Another loop for the data??? Pendiente completar
-		var bodyTable = document.createElement('div');
-		bodyTable.setAttribute('class', 'columnPallet');
 		for (prop in order) {
 			if (inventory[prop]) {
 				var item = createItem(prop);
@@ -168,20 +166,13 @@ function calcular() {
 					divDataRow.appendChild(document.createTextNode(contenido));
 					rowData.appendChild(divDataRow);
 				}
-				bodyTable.appendChild(rowData);
+				tablaPallets.appendChild(rowData);
 			}
 		}
-		tablaPallets.appendChild(bodyTable);
 		return tablaPallets;
 	}
 
 	_HTML.append(crearRelacionPallets(), 'pallet');
-
-	// for (prop in order) {
-	// 	if (inventory[prop]) {
-	// 			console.log(cubi(prop));
-	// 	}
-	// }
 };
 
 // This will be update with ingresar_item function
