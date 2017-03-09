@@ -156,7 +156,8 @@ function calcular() {
 					cantidad,
 					palletsCompletos,
 					unidadesPendienteCubicar(cantidad),
-					metrosCubicosCompletos()];
+					metrosCubicosCompletos()
+				];
 
 				var rowData = document.createElement('div');
 				rowData.setAttribute('class', 'row');

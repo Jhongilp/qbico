@@ -29,9 +29,7 @@ h1 {
 	Input-Section
 ++++++++++++++++++++++++++*/
 .input-section {
-	margin-top: 0.3em;
 	margin-bottom: 0.3em;
-	/*background-color: rgba(234, 235, 237, .8);*/
 }
 
 input {
@@ -113,7 +111,7 @@ input[type='number'] {
 	border-top: 1px solid #ddd;
 	width: 98%;
 	margin: 0 auto;
-	padding: 0;
+	padding: 10px 0 0 0;
 }
 
 .content {
@@ -130,8 +128,6 @@ input[type='number'] {
 
 .col {
 	background-color: rgba(234, 235, 237, .8);
-	/*background-color: rgba(197, 198, 201, 1);*/
-	border: 1px solid #efefef;
 	text-align: center;
 }
 
@@ -219,14 +215,15 @@ canvas {
 
 .row {
 	display: flex;
+	justify-content: center;
 }
 
 .row div {
-	flex-direction: column;
+	/*flex-direction: column;*/
 	font-size: 0.8em;
   width: 20%;
   border: 1px solid #fff;
-	height: 50px;
+	padding: 5px;
 }
 
 
